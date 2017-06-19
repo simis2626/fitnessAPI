@@ -1,13 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var mngC = require('mongodb').MongoClient;
-
-var url = 'mongodb://docker.techtoedip.com:27017/fitnessApp';
+var shared = require('./shared');
+var shr = new shared();
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    mngC.connect(url, function (err, db) {
+shr.router.get('/', function (req, res, next) {
+    shr.mngC.connect(shr.url, function (err, db) {
         var collection = db.collection('testing');
 
     });
@@ -16,4 +13,4 @@ router.get('/', function(req, res, next) {
     res.json({status: "ok"});
 });
 
-module.exports = router;
+module.exports = shr.router;
