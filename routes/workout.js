@@ -25,4 +25,24 @@ shr.router.post('/', function (req, res, next) {
 });
 
 
+shr.router.get('/from/:dtStart/to/:dtEnd:', function (req, res, next) {
+
+    shr.mngC.connect(shr.url, function (err, db) {
+        var collection = db.collection('workout');
+        collection.find({}, function (err, docs) {
+
+
+        });
+
+    });
+
+});
+
+
+
+
+
+
+
+
 module.exports = shr.router;
