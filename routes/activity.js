@@ -12,9 +12,9 @@ var shr = new shared();
 shr.router.get('/', function (req, res, next) {
     shr.mngC.connect(shr.url, function (err, db) {
         var collection = db.collection('activity');
-        collection.find({}, function (err, results) {
-            console.log(results);
+        collection.find().toArray(function (err, results) {
             res.json(results);
+            db.close();
         })
 
     });
