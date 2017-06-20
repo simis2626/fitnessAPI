@@ -9,3 +9,26 @@
  public stretchesDone?:boolean,
  public activities?:ActivityWO[]*/
 
+var shared = require('./shared');
+var shr = new shared();
+
+shr.router.post('/', function (req, res, next) {
+    shr.mngC.connect(shr.url, function (err, db) {
+        var collection = db.collection('workout');
+        collection.add(req.json, function (err, docs) {
+            console.log(err, docs);
+        }
+
+
+            .toArray(function (err, results) {
+                res.json(results);
+                db.close();
+            })
+
+    });
+
+
+});
+
+
+module.exports = shr.router;
