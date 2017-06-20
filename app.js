@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
 var activity = require('./routes/activity');
 var workout = require('./routes/workout');
 var weighin = require('./routes/weigh-in');
@@ -23,7 +22,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', index);
 app.use('/api/activity', activity);
 app.use('/api/workout', workout);
 app.use('/api/weighin', weighin);
