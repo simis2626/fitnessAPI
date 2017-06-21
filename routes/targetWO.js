@@ -20,12 +20,11 @@ shr.router.get('/:userid', function (req, res, next) {
 
 
     shr.mngC.connect(shr.url, function (err, db) {
-        var collection = db.collection('workout');
-        collection.find({date: {$gte: dtStart, $lte: dtEnd}}).toArray(function (err, docs) {
+        var collection = db.collection('targetWO');
+        collection.find({_userId: req.params.userid}).toArray(function (err, docs) {
             if (err) {
                 console.log(err);
             }
-            console.log(docs);
             res.json(docs);
             res.end();
 
