@@ -1,4 +1,7 @@
 /**
+ * Created by andromeda on 21/06/2017.
+ */
+/**
  * Created by Andromeda on 19/06/2017.
  */
 /*
@@ -13,10 +16,7 @@ var shared = require('./shared');
 var shr = new shared();
 
 
-shr.router.get('/from/:strStart/to/:strEnd', function (req, res, next) {
-
-    var dtStart = new Date(req.params.strStart);
-    var dtEnd = new Date(req.params.strEnd);
+shr.router.get('/:userid', function (req, res, next) {
 
 
     shr.mngC.connect(shr.url, function (err, db) {
@@ -40,14 +40,10 @@ shr.router.post('/', function (req, res, next) {
 
     var insertDoc = req.body;
     insertDoc.date = new Date(insertDoc.date);
-    for (var i = 0; i < insertDoc.activities.length; i++) {
-        insertDoc.activities[i].date = insertDoc.date;
-    }
-
 
 
     shr.mngC.connect(shr.url, function (err, db) {
-        var collection = db.collection('workout');
+        var collection = db.collection('targetWO');
         collection.insertOne(insertDoc, function (err, docs) {
             res.json({saved: "true"});
         });
@@ -56,13 +52,6 @@ shr.router.post('/', function (req, res, next) {
 
 
 });
-
-
-
-
-
-
-
 
 
 module.exports = shr.router;
