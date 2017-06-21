@@ -9,7 +9,7 @@ var activity = require('./routes/activity');
 var workout = require('./routes/workout');
 var weighin = require('./routes/weigh-in');
 var targetWO = require('./routes/targetWO');
-var userapi = require('/routes/user');
+var userapi = require('./routes/user');
 
 
 var app = express();
