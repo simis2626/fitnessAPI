@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var activity = require('./routes/activity');
 var workout = require('./routes/workout');
 var weighin = require('./routes/weigh-in');
+var targetWO = require('./routes/targetWO');
 
 
 var app = express();
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use('/api/activity', activity);
 app.use('/api/workout', workout);
 app.use('/api/weighin', weighin);
+app.use('/api/targetWO', targetWO);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
