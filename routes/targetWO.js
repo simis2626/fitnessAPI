@@ -21,7 +21,7 @@ shr.router.get('/:userid', function (req, res, next) {
 
     shr.mngC.connect(shr.url, function (err, db) {
         var collection = db.collection('targetWO');
-        collection.find({_userId: req.params.userid}).toArray(function (err, docs) {
+        collection.find({_userId: req.params.userid}).sort('date','desc').toArray(function (err, docs) {
             if (err) {
                 console.log(err);
             }

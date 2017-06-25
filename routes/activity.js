@@ -23,4 +23,25 @@ shr.router.get('/', function (req, res, next) {
 });
 
 
+shr.router.post('/', function (req,res,next){
+   shr.mngC.connect(shr.url, function (err, db){
+
+       var coll = db.collection('activity');
+       coll.insertOne(req.body, function (err, results) {
+           if(err){
+               console.log(err);
+               res.statusCode(500).end();
+           }else {
+               res.json(results);
+
+           }
+           db.close();
+       });
+   }) ;
+
+
+
+
+});
+
 module.exports = shr.router;
