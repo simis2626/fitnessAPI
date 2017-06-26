@@ -65,7 +65,9 @@ shr.router.get('/activity/frequency/:userid', function (req, res, next){
             collection.aggregate([
                 {'$match': {"_userid": req.params.userid}},
                 {'$unwind':'$activities'},
-                {'$group':{'_id':{'id':'$activities.activity._id','name':'$activities.activity.name'}, 'count': {$sum: 1}}}
+                {'$group':{'_id':{'id':'$activities.activity._id','name':'$activities.activity.name'}, 'count': {$sum: 1}}},
+                    {'$sort':{'$count':-1}},
+                    {'$limit': 3}
 
 
 
