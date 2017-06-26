@@ -57,6 +57,39 @@ shr.router.post('/', function (req, res, next) {
 
 });
 
+shr.router.get('/activity/frequency/:userid', function (req, res, next){
+
+    shr.mngC.connect(shr.url, function (err, db) {
+            var collection = db.collection('workout');
+            console.log(req.params.userid);
+            collection.aggregate([
+                {'$match': {"_userid": req.params.userid}},
+                {'$unwind':'$activities'},
+                {'$group':{'_id':{'id':'$activities.activity._id','name':'$activities.activity.name'}, 'count': {$sum: 1}}}
+
+
+
+
+
+
+                ],
+                function (err, results) {
+                    if (err){
+                        console.log(err);
+                        res.statusCode(500).end();
+                    }else{
+                        res.json(results);
+                    }
+                });
+        }
+
+        );
+
+
+
+
+
+});
 
 
 
