@@ -93,69 +93,6 @@ shr.router.get('/activity/frequency/:userid', function (req, res, next){
 
 });
 
-shr.router.get('/activity/stats/weights/:userid', function (req, res, next){
-
-    shr.mngC.connect(shr.url, function (err, db) {
-            var collection = db.collection('workout');
-            console.log(req.params.userid);
-            collection.aggregate([
-                    {'$facet':{"personalBests":[
-
-
-
-                    {'$match': {"_userid": req.params.userid}},
-                    {'$unwind': '$activities'},
-                    {'$match': {"activities.activity.cardio": false}},
-                    {
-                        '$group': {
-                            '_id': {
-                                'id': '$activities.activity._id',
-                                'name': '$activities.activity.name',
-                                'weight': '$activities.weight'
-                            }, 'PbReps': {$max: '$activities.reps'}
-                        }
-                    },
-                    {'$sort': {'PbReps': -1}}
-                    ],
-                'mostRecent': [{'$match': {"_userid": req.params.userid}},
-                        {'$unwind': '$activities'},
-                        {'$match': {"activities.activity.cardio": false}},
-                        {
-                            '$group': {
-                                '_id': {
-                                    'id': '$activities.activity._id',
-                                    'name': '$activities.activity.name',
-                                    'weight': '$activities.weight',
-                                    'reps':'$activities.reps',
-                                    'date': "$date",
-                                    'year':{$year:'$date'},
-                                    'day':{$dayOfYear:'$date'}
-                                }
-
-                        }},
-                        {$sort: {"_id.year": -1, "_id.day": -1}},
-                    {'$group':{'_id': {
-                        'id':'$_id.id',
-                        'name':"$_id.name",
-                        'weight':'$_id.weight'},
-                        'mostRecent':{'$first':'$_id.date'},
-                        'reps':{'$first':'$_id.reps'}}}
-                        ]}}]
-                    , function (err1,results) {
-
-
-                        if (err1) {
-                            console.log(err1);
-                            res.status(500).end();
-                        } else {
-
-
-                            res.json(results);
-                        }
-                    });
-
-                });
-        });
 
 
 //TODO: remove this.
