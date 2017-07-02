@@ -15,7 +15,27 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
         var collection = db.collection('workout');
         console.log(req.params.userid);
         collection.aggregate([
-                {'$facet':{"personalBests":[
+                {'$facet':{'activityNames':[
+                    {'$match': {"_userid": req.params.userid}},
+                    {'$unwind': '$activities'},
+                    {'$match': {"activities.activity.cardio": false}},
+                    {
+                        '$group': {
+                            '_id': {
+                                'name': '$activities.activity.name'
+                            }
+                        }
+                    },
+                    {'$sort': {'_id.name': 1}}
+                ]
+
+
+
+
+
+
+
+                    ,"personalBests":[
 
 
 
@@ -31,7 +51,8 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                             }, 'PbReps': {$max: '$activities.reps'}
                         }
                     },
-                    {'$sort': {'PbReps': -1}}
+                        {'$sort': {'PbReps': -1}}
+
                 ],
                     'mostRecent': [{'$match': {"_userid": req.params.userid}},
                         {'$unwind': '$activities'},
