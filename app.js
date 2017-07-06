@@ -1,3 +1,4 @@
+/*eslint-disable unknown-require */
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -10,6 +11,8 @@ var workout = require('./routes/workout');
 var weighin = require('./routes/weigh-in');
 var targetWO = require('./routes/targetWO');
 var userapi = require('./routes/user');
+var fitbitInfo = require('./routes/fitbit');
+
 
 
 var app = express();
@@ -29,6 +32,7 @@ app.use('/api/workout', workout);
 app.use('/api/weighin', weighin);
 app.use('/api/targetWO', targetWO);
 app.use('/api/user', userapi);
+app.use('/api/fitbit', fitbitInfo);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
