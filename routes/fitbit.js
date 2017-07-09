@@ -47,9 +47,10 @@ shr.router.post('/', function (req, res1, next) {
       res.setEncoding('utf8');
       res.on('data', function (chunk) {
           shr.mngC.connect(shr.url, function (err, db) {
-              chunk._userid = req.body._userid;
+              var chunk1 = JSON.parse(chunk);
+              chunk1._userid = req.body._userid;
               var coll = db.collection('fitbit');
-              coll.insertOne(chunk, function (err, results) {
+              coll.insertOne(chunk1, function (err, results) {
                   if (err) {
                       console.log(err);
                       res1.statusCode(500).end();
