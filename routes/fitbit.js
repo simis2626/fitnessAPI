@@ -20,7 +20,7 @@ shr.router.get('/trigger/:userid', function(req,res,next){
     
 });
 
-shr.router.post('/', function (req,res,next){
+shr.router.post('/', function (req, res1, next) {
     // Build the post string from an object
     var post_data = querystring.stringify({
         'clientId': '228GFT',
@@ -52,9 +52,9 @@ shr.router.post('/', function (req,res,next){
               coll.insertOne(chunk, function (err, results) {
                   if (err) {
                       console.log(err);
-                      res.statusCode(500).end();
+                      res1.statusCode(500).end();
                   } else {
-                      res.json(results);
+                      res1.json(results);
 
                   }
                   db.close();
