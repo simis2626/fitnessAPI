@@ -2,6 +2,7 @@
  * Created by Andromeda on 19/06/2017.
  */
 
+/*globals res1 */
 var querystring = require('querystring');
 var http = require('http');
 var http1 = require('https');
@@ -10,35 +11,29 @@ var shr = new shared();
 
 
 
-shr.router.get('/trigger/:userid', function(req,res,next){
+shr.router.post('/trigger/:userid', function(req,res,next){
    res.json({'status':'trigger received, starting API calls, will populate weigh-ins'});
     shr.mngC.connect(shr.url, function (err, db) {
         var coll = db.collection('fitbit');
-        coll.find({'_userid': req.params._userid}).toArray(function (results) {
+        console.log(req.params.userid);
+        coll.find({'_userid' : req.params.userid}).toArray(function (err,results) {
             if (err) {
                 console.log(err);
-                res1.statusCode(500).end();
+                res.statusCode(500).end();
             } else {
-                res1.json(results);
-
-            }
-            db.close();
-        });
-    });
-
-
+                console.log(results);
+                
     var post_options = {
         host: 'api.fitbit.com',
         port: '443',
-        path: '/1/user/-/body/log/weight/date/2017-07-01/2017-07-09.json',
+        path: '/1/user/-/body/log/weight/date/' + new Date().getFullYear() +'-'+ (new Date().getMonth()+1) + new Date().getDate() + '/1m.json',
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1VjQyTUYiLCJhdWQiOiIyMjhHRlQiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyd2VpIHJociByYWN0IHJwcm8iLCJleHAiOjE0OTk2MTMwNDAsImlhdCI6MTQ5OTU4NDI0MH0.vvymGzVj8YR-iiMQ8L5hei-sar1_NfK-1fblhrddNVo'
+            'Authorization': 'Bearer ' + results[0].access_token
         }
     };
-
-
+    console.log(post_options);         
     http1.get(post_options, function (res1) {
 
         var body = '';
@@ -52,9 +47,23 @@ shr.router.get('/trigger/:userid', function(req,res,next){
             console.log(err);
         });
     });
+                
+                
+                
+                
+
+            }
+            db.close();
+        });
+    });
+
+
+
+
     
     
 });
+
 
 shr.router.post('/', function (req, res1, next) {
     // Build the post string from an object
@@ -110,5 +119,6 @@ shr.router.post('/', function (req, res1, next) {
 
 
 });
+
 
 module.exports = shr.router;
