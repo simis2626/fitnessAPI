@@ -95,7 +95,7 @@ shr.router.post('/', function (req, res1, next) {
               var chunk1 = JSON.parse(chunk);
               chunk1._userid = req.body._userid;
               var coll = db.collection('fitbit');
-              coll.insertOne(chunk1, function (err, results) {
+              coll.findOneAndReplace({_userid:chunk1._userid},chunk1,{upsert:true}, function (err, results) {
                   if (err) {
                       console.log(err);
                       res1.statusCode(500).end();
