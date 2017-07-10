@@ -29,4 +29,13 @@ shr.router.post('/', function (req, res, next) {
 });
 
 
+shr.router.get('/:userid', function (req, res, next) {
+    shr.mngC.connect(shr.url, function (err, db) {
+        var collection = db.collection('weighin');
+        collection.find({_userid: req.params.userid}).toArray(), function (err, docs) {
+            r
+        };
+        )
+    });
+
 module.exports = shr.router;

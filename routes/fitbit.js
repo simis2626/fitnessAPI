@@ -122,14 +122,11 @@ const get30DaysWeights = function (_userid, callback) {
 };
 
 
-
-
 shr.router.post('/trigger/:userid', function (req, res, next) {
     get30DaysWeights(req.params.userid, function (results) {
         res.json(results);
     });
-    });
-
+});
 
 
 shr.router.post('/', function (req, res1, next) {
