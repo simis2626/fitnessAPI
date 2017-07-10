@@ -47,6 +47,7 @@ shr.router.get('/:userid', function (req, res, next) {
                     }
                 ]
                 , function (err2, docs2) {
+                    db.close();
                     docs2.forEach(function (obj) {
                         obj.time = "fitbit";
                     });
