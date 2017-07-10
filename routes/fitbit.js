@@ -132,7 +132,9 @@ shr.router.post('/', function (req, res1, next) {
           shr.mngC.connect(shr.url, function (err, db) {
               var chunk1 = JSON.parse(chunk);
               chunk1._userid = req.body._userid;
+              console.log(Date.now(),chunk1.expires_in);
               chunk1.expireTime = new Date(Date.now() + chunk1.expires_in);
+              console.log(chunk1.expireTime.valueOf());
               var coll = db.collection('fitbit');
               coll.findOneAndReplace({_userid:chunk1._userid},chunk1,{upsert:true}, function (err, results) {
                   if (err) {
