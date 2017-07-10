@@ -72,55 +72,61 @@ const getAuthToken = function (_userid, callback) {
 
 };
 
-
-shr.router.post('/trigger/:userid', function (req, res, next) {
+const get30DaysWeights = function (_userid, callback) {
     shr.mngC.connect(shr.url, function (err, db) {
         var coll = db.collection('fitbit');
-        getAuthToken(req.params.userid, function (fitbitAuth) {
+        getAuthToken(_userid, function (fitbitAuth) {
 
 
+            var dtMonth = new Date().getMonth() + 1;
+            var dtMonth = dtMonth > 9 ? dtMonth : '0' + dtMonth;
+            var post_options = {
+                host: 'api.fitbit.com',
+                port: '443',
+                path: '/1/user/-/body/log/weight/date/' + new Date().getFullYear() + '-' + dtMonth + '-' + new Date().getDate() + '/1m.json',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + fitbitAuth.access_token
+                }
+            };
+            http1.get(post_options, function (res1) {
 
-        var dtMonth = new Date().getMonth() + 1;
-        var dtMonth = dtMonth > 9 ? dtMonth : '0' + dtMonth;
-        var post_options = {
-            host: 'api.fitbit.com',
-            port: '443',
-            path: '/1/user/-/body/log/weight/date/' + new Date().getFullYear() + '-' + dtMonth + '-' + new Date().getDate() + '/1m.json',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Bearer ' + fitbitAuth.access_token
-            }
-        };
-        http1.get(post_options, function (res1) {
-
-            var body = '';
-            res1.on('data', function (chunk) {
-                body += chunk;
-            });
-            res1.on('end', function () {
-                var collweight = db.collection('fitbitWeight');
-                var JSONbody = JSON.parse(body);
-                JSONbody.weight.forEach(function (obj) {
-                    obj._userid = fitbitAuth._userid;
+                var body = '';
+                res1.on('data', function (chunk) {
+                    body += chunk;
                 });
+                res1.on('end', function () {
+                    var collweight = db.collection('fitbitWeight');
+                    var JSONbody = JSON.parse(body);
+                    JSONbody.weight.forEach(function (obj) {
+                        obj._userid = fitbitAuth._userid;
+                    });
 
 
-                collweight.insertMany(JSONbody.weight, null, function (err2, results3) {
-                    res.json(results3);
+                    collweight.insertMany(JSONbody.weight, null, function (err2, results3) {
+                        db.close();
+                        callback(results3);
+                    });
+                });
+                res1.on('error', function (err) {
+                    console.log(err);
                     db.close();
                 });
             });
-            res1.on('error', function (err) {
-                console.log(err);
-                db.close();
-            });
-        });
-
-
 
 
         });
+    });
+
+};
+
+
+
+
+shr.router.post('/trigger/:userid', function (req, res, next) {
+    get30DaysWeights(req.params.userid, function (results) {
+        res.json(results);
     });
     });
 
