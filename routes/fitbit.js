@@ -26,7 +26,7 @@ shr.router.post('/trigger/:userid', function(req,res,next){
     var post_options = {
         host: 'api.fitbit.com',
         port: '443',
-        path: '/1/user/-/body/log/weight/date/' + new Date().getFullYear() +'-'+ (new Date().getMonth()+1) + new Date().getDate() + '/1m.json',
+        path: '/1/user/-/body/log/weight/date/' + new Date().getFullYear() +'-'+ (new Date().getMonth()+1) +'-'+ new Date().getDate() + '/1m.json',
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
