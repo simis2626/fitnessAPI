@@ -10,17 +10,17 @@ var shared = require('./shared');
 var shr = new shared();
 
 
-const getAuthToken = function (_userid) {
+const getAuthToken = function (_userid, callback) {
     shr.mngC.connect(shr.url, function (err, db) {
         var coll = db.collection('fitbit');
         coll.find({'_userid': _userid}).toArray(function (err, results) {
             if (err) {
                 console.log(err);
-                return err;
+                callback(err);
             }
             if (results) {
                 if (results[0].expireTime.valueOf() > Date.now()) {
-                    return results[0];
+                    callback(results[0]);
                 } else {
                     // Build the post string from an object
                     var post_data = querystring.stringify({
@@ -53,9 +53,9 @@ const getAuthToken = function (_userid) {
                             coll.findOneAndReplace({'_userid': chunk1._userid}, chunk1, {upsert: true}, function (err1, results1) {
                                 if (err1) {
                                     console.log(err1);
-                                    return err1;
+                                    callback(err1);
                                 } else {
-                                    return chunk1;
+                                    callback(chunk1);
                                 }
                                 db.close();
                             });
@@ -68,14 +68,17 @@ const getAuthToken = function (_userid) {
                 }
             }
         });
-    })
+    });
+
 };
 
 
 shr.router.post('/trigger/:userid', function (req, res, next) {
     shr.mngC.connect(shr.url, function (err, db) {
         var coll = db.collection('fitbit');
-        var fitbitAuth = getAuthToken(req.params.userid);
+        getAuthToken(req.params.userid, function (fitbitAuth) {
+
+
 
         var dtMonth = new Date().getMonth() + 1;
         var dtMonth = dtMonth > 9 ? dtMonth : '0' + dtMonth;
@@ -98,7 +101,7 @@ shr.router.post('/trigger/:userid', function (req, res, next) {
             res1.on('end', function () {
                 var collweight = db.collection('fitbitWeight');
                 var JSONbody = JSON.parse(body);
-                body.weight.forEach(function (obj) {
+                JSONbody.weight.forEach(function (obj) {
                     obj._userid = fitbitAuth._userid;
                 });
 
@@ -118,6 +121,7 @@ shr.router.post('/trigger/:userid', function (req, res, next) {
 
 
         });
+    });
     });
 
 
