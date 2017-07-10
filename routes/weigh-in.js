@@ -32,10 +32,33 @@ shr.router.post('/', function (req, res, next) {
 shr.router.get('/:userid', function (req, res, next) {
     shr.mngC.connect(shr.url, function (err, db) {
         var collection = db.collection('weighin');
-        collection.find({_userid: req.params.userid}).toArray(), function (err, docs) {
-            r
-        };
-        )
+        collection.find({_userid: req.params.userid}).toArray(function (err, docs) {
+            var coll2 = db.collection('fitbitWeight');
+            coll2.aggregate([
+                    {'$match': {'_userid': req.params.userid}},
+                    {
+                        '$group': {
+                            '_id': '$logId',
+                            'weight': {'$first': '$weight'},
+                            '_userid': {'$first': '$_userid'},
+                            'date': {'$first': '$date'},
+                            'bmi': {'$first': '$bmi'}
+                        }
+                    }
+                ]
+                , function (err2, docs2) {
+                    docs2.forEach(function (obj) {
+                        obj.time = "fitbit";
+                    });
+                    docs.forEach(function (obj) {
+                        obj.date = new Date(obj.date);
+                    });
+                    results = docs.concat(docs2);
+                    res.json(results);
+                });
+
+        });
     });
+});
 
 module.exports = shr.router;
