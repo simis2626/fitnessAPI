@@ -11,8 +11,37 @@ var shr = new shared();
 
 
 
+
+const getAuthToken = function(_userid){
+    shr.mngC.connect(shr.url, function (err, db) {
+        var coll = db.collection('fitbit');
+        console.log(req.params.userid);
+        coll.find({'_userid' : _userid}).toArray(function (err,results) {
+            if(results[0].expireTime.valueOf() > Date.now()){
+                
+            }
+            
+    
+    
+    
+    
+    
+    
+    
+});});};
+
+
+
+
+
+
+
+
+
+
+
+
 shr.router.post('/trigger/:userid', function(req,res,next){
-   res.json({'status':'trigger received, starting API calls, will populate weigh-ins'});
     shr.mngC.connect(shr.url, function (err, db) {
         var coll = db.collection('fitbit');
         console.log(req.params.userid);
@@ -21,14 +50,9 @@ shr.router.post('/trigger/:userid', function(req,res,next){
                 console.log(err);
                 res.statusCode(500).end();
             } else {
-                console.log(results);
                 
                 var dtMonth = new Date().getMonth()+1
                 var dtMonth = dtMonth >9 ? dtMonth : '0' + dtMonth;
-                
-                
-                
-                
     var post_options = {
         host: 'api.fitbit.com',
         port: '443',
@@ -48,10 +72,17 @@ shr.router.post('/trigger/:userid', function(req,res,next){
         });
         res1.on('end', function () {
             var collweight = db.collection('fitbitWeight');
-            collweight.insertMany(body.weight);
+            var JSONbody = JSON.parse(body)
+            
+            
+            collweight.insertMany(JSONbody.weight,null, function(err2, results3){
+                res.json(results3);
+                db.close();
+            });
         });
         res1.on('error', function (err) {
             console.log(err);
+            db.close();
         });
     });
                 
@@ -60,7 +91,7 @@ shr.router.post('/trigger/:userid', function(req,res,next){
                 
 
             }
-            db.close();
+            
         });
     });
 
@@ -101,6 +132,7 @@ shr.router.post('/', function (req, res1, next) {
           shr.mngC.connect(shr.url, function (err, db) {
               var chunk1 = JSON.parse(chunk);
               chunk1._userid = req.body._userid;
+              chunk1.expireTime = new Date(Date.now() + chunk1.expires_in);
               var coll = db.collection('fitbit');
               coll.findOneAndReplace({_userid:chunk1._userid},chunk1,{upsert:true}, function (err, results) {
                   if (err) {
