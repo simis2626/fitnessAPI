@@ -18,7 +18,6 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                 {'$facet':{'activityNames':[
                     {'$match': {"_userid": req.params.userid}},
                     {'$unwind': '$activities'},
-                    {'$match': {"activities.activity.cardio": false}},
                     {
                         '$group': {
                             '_id': {
@@ -28,18 +27,9 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                     },
                     {'$sort': {'_id.name': 1}}
                 ]
-
-
-
-
-
-
-
-                    ,"personalBests":[
-
-
-
-                    {'$match': {"_userid": req.params.userid}},
+                ,"personalBests":[
+                
+                {'$match': {"_userid": req.params.userid}},
                     {'$unwind': '$activities'},
                     {'$match': {"activities.activity.cardio": false}},
                     {
@@ -56,12 +46,13 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                 ],
                     'mostRecent': [{'$match': {"_userid": req.params.userid}},
                         {'$unwind': '$activities'},
-                        {'$match': {"activities.activity.cardio": false}},
                         {
                             '$group': {
                                 '_id': {
                                     'id': '$activities.activity._id',
                                     'name': '$activities.activity.name',
+                                    'intensity':'$activities.intensity',
+                                    'distance':'$activities.distance',
                                     'weight': '$activities.weight',
                                     'reps':'$activities.reps',
                                     'date': "$date",
@@ -76,7 +67,9 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                             'name':"$_id.name",
                             'weight':'$_id.weight'},
                             'mostRecent':{'$first':'$_id.date'},
-                            'reps':{'$first':'$_id.reps'}}}
+                            'reps':{'$first':'$_id.reps'},
+                            'distance':{'$first':"$_id.distance"},
+                            'intensity':{'$first':"$_id.intensity"}}}
                     ]}}]
             , function (err1,results) {
 
