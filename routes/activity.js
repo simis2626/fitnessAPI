@@ -21,7 +21,8 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                     {
                         '$group': {
                             '_id': {
-                                'name': '$activities.activity.name'
+                                'name': '$activities.activity.name',
+                                'cardio': '$activities.activity.cardio'
                             }
                         }
                     },
