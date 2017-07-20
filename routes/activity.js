@@ -71,7 +71,41 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                             'reps':{'$first':'$_id.reps'},
                             'distance':{'$first':"$_id.distance"},
                             'intensity':{'$first':"$_id.intensity"}}}
-                    ]}}]
+                    ], 
+                    "personalBestsCardio":[
+                
+                {'$match': {"_userid": req.params.userid}},
+                    {'$unwind': '$activities'},
+                    {'$match': {"activities.activity.cardio": true}},
+                    {
+  '$bucket': {
+      'groupBy': '$activities.duration',
+      'boundaries': [0,7,13,18,23,28,33,38,43,48,53,58,63,68,73,80],
+      'default': 'outOfBounds',
+      'output': {
+            'dates': {'$first':'$activities.date'},
+            
+            'reps': {'$push':'$activities.distance'},
+            'intensity':{'$first':'$activities.intensity'}
+      }
+   }
+}
+                    
+                    
+                    
+                    
+                    ,{
+                        '$group': {
+                            '_id': {
+                                'id': '$activities.activity._id',
+                                'name': '$activities.activity.name',
+                                'weight': '$activities.weight'
+                            }, 'PbReps': {$max: '$activities.reps'}
+                        }
+                    },
+                        {'$sort': {'PbReps': -1}}
+
+                ]}}]
             , function (err1,results) {
 
 
