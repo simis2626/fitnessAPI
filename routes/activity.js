@@ -77,34 +77,17 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                 {'$match': {"_userid": req.params.userid}},
                     {'$unwind': '$activities'},
                     {'$match': {"activities.activity.cardio": true}},
+                    {$sort:{'activities.duration':-1}},
                     {
   '$bucket': {
-      'groupBy': '$activities.duration',
+      'groupBy':'$activities.duration',
       'boundaries': [0,7,13,18,23,28,33,38,43,48,53,58,63,68,73,80],
       'default': 'outOfBounds',
-      'output': {
-            'dates': {'$first':'$activities.date'},
-            
-            'reps': {'$push':'$activities.distance'},
-            'intensity':{'$first':'$activities.intensity'}
+      'output': { 'results':{'$push':{'name':'$activities.activity.name','date':'$activities.date','distance':'$activities.distance',
+            'intensity':'$activities.intensity',
+            'duration':'$activities.duration'}}}
       }
-   }
 }
-                    
-                    
-                    
-                    
-                    ,{
-                        '$group': {
-                            '_id': {
-                                'id': '$activities.activity._id',
-                                'name': '$activities.activity.name',
-                                'weight': '$activities.weight'
-                            }, 'PbReps': {$max: '$activities.reps'}
-                        }
-                    },
-                        {'$sort': {'PbReps': -1}}
-
                 ]}}]
             , function (err1,results) {
 
@@ -146,7 +129,7 @@ shr.router.post('/', function (req,res,next){
    shr.mngC.connect(shr.url, function (err, db){
 
        var coll = db.collection('activity');
-       coll.insertOne(req.body, function (err, results) {
+       coll.insertOne(JSON.parse(req.body), function (err, results) {
            if(err){
                console.log(err);
                res.statusCode(500).end();
