@@ -51,7 +51,7 @@ var insertWorkouts  = function(){
     shr.mngC.connect(shr.url, function (err, db) {
     var collC = db.collection('workout');
     var i;
-    for (i=0;i<1;i++){
+    for (i=0;i<1000;i++){
     collC.insertMany([
         {
             "_userid": "google-oauth2|109221858942102695401",
@@ -383,6 +383,8 @@ var insertWorkouts  = function(){
 
 });
 };
+
+
 
 insertWorkouts();
 return;

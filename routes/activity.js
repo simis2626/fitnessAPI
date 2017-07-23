@@ -88,6 +88,8 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
             'duration':'$activities.duration'}}}
       }
 }
+,{'$group':{'_id': {
+                            'duration':'$_id', 'name':'$results.name'},'distance':{'$max':'$results.distance'}}}
                 ]}}]
             , function (err1,results) {
 
