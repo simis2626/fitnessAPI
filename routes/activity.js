@@ -47,6 +47,8 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                 ],
                     'mostRecent': [{'$match': {"_userid": req.params.userid}},
                         {'$unwind': '$activities'},
+                        
+                    {'$match': {"activities.activity.cardio": false}},
                         {
                             '$group': {
                                 '_id': {
@@ -78,19 +80,71 @@ shr.router.get('/stats/weights/:userid', function (req, res, next){
                     {'$unwind': '$activities'},
                     {'$match': {"activities.activity.cardio": true}},
                     {$sort:{'activities.duration':-1}},
+                    
+                    {'$group':{'_id': {
+                            'duration':'$activities.duration', 'name':'$activities.activity.name'},'distance':{'$max':'$activities.distance'}}}
+                            
+                            ,
                     {
   '$bucket': {
-      'groupBy':'$activities.duration',
-      'boundaries': [0,7,13,18,23,28,33,38,43,48,53,58,63,68,73,80],
+      'groupBy':'$_id.duration',
+      'boundaries': [0,7,13,18,23,28,33,38,43,48,53,58,63,68,73,78,80],
       'default': 'outOfBounds',
-      'output': { 'results':{'$push':{'name':'$activities.activity.name','date':'$activities.date','distance':'$activities.distance',
-            'intensity':'$activities.intensity',
-            'duration':'$activities.duration'}}}
-      }
-}
-,{'$group':{'_id': {
+      'output': { 'results':{'$push':{'name':'$_id.name','distance':'$distance'}}}
+}},
+
+                    {'$unwind': '$results'},
+                    
+                    {'$group':{'_id': {
                             'duration':'$_id', 'name':'$results.name'},'distance':{'$max':'$results.distance'}}}
-                ]}}]
+                            
+                            
+
+                ],
+                    'mostRecentCardio': [{'$match': {"_userid": req.params.userid}},
+                        {'$unwind': '$activities'},
+                    {'$match': {"activities.activity.cardio": true}},
+                        {
+                            '$group': {
+                                '_id': {
+                                    'id': '$activities.activity._id',
+                                    'name': '$activities.activity.name',
+                                    'intensity':'$activities.intensity',
+                                    'distance':'$activities.distance',
+                                    'duration':'$activities.duration',
+                                    'date': "$date",
+                                    'year':{$year:'$date'},
+                                    'day':{$dayOfYear:'$date'}
+                                }
+
+                            }},
+                        {$sort: {"_id.year": -1, "_id.day": -1}},
+                        {'$group':{'_id': {
+                            'id':'$_id.id',
+                            'name':"$_id.name",'duration':'$_id.duration'},
+                            'mostRecent':{'$first':'$_id.date'},
+                            'dayOfYear':{'$first':'$_id.day'},
+                            'year':{'$first':'$_id.year'},
+                            'distance':{'$first':"$_id.distance"},
+                            'intensity':{'$first':"$_id.intensity"}}},
+                    {
+  '$bucket': {
+      'groupBy':'$_id.duration',
+      'boundaries': [0,7,13,18,23,28,33,38,43,48,53,58,63,68,73,78,80],
+      'default': 'outOfBounds',
+      'output': { 'results':{'$push':{'name':'$_id.name','distance':'$distance','year':'$year','dayOfYear':'$dayOfYear', 'date':'$mostRecent','intensity':'$intensity'}}}
+}},{$unwind : '$results'},
+{$sort:{'results.year':-1,'results.dayOfYear':-1}},
+{'$group':{'_id': {
+                            'duration':'$_id',
+                            'name':"$results.name"},
+                            'mostRecent':{'$first':'$results.date'},
+                            'dayOfYear':{'$first':'$results.dayOfYear'},
+                            'year':{'$first':'$results.year'},
+                            'distance':{'$first':"$results.distance"},
+                            'intensity':{'$first':"$results.intensity"}}},
+
+                    ]}}]
             , function (err1,results) {
 
 
