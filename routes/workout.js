@@ -151,7 +151,21 @@ shr.router.get('/hist/:_userid/:returnNum', function (req, res, next) {
                                 }
                             }
                                             ,
-                                            {$group:{"_id":{year:'$year',week:'$week',dayOfYear:'$dayOfYear',dayOfWeek:'$dayOfWeek',_userid:'$_userid'}, 'count':{$sum:1},'duration':{$sum:'$duration'}, 'stretches':{$sum: { $cond: [ '$stretchesDone', 1, 0 ] }}}},
+                            {
+                                $group: {
+                                    "_id": {
+                                        year: '$year',
+                                        week: '$week',
+                                        dayOfYear: '$dayOfYear',
+                                        dayOfWeek: '$dayOfWeek',
+                                        _userid: '$_userid',
+                                        date: '$date'
+                                    },
+                                    'count': {$sum: 1},
+                                    'duration': {$sum: '$duration'},
+                                    'stretches': {$sum: {$cond: ['$stretchesDone', 1, 0]}}
+                                }
+                            },
                                             {$project:{'stretches':1,'count':1,'duration':1, 'stretchesBool':{$eq:['$stretches','$count']} }},
                                             {$sort:{'_id.year':-1,'_id.week':-1, '_id.dayOfWeek':1}},
                                             {$match:{'_id._userid':req.params._userid}},
