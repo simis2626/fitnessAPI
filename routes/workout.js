@@ -95,6 +95,57 @@ shr.router.get('/activity/frequency/:userid', function (req, res, next){
 
 
 
+shr.router.get('/hist/:returnNum', function (req,res,next){
+    shr.mngC.connect(shr.url, function (err, db) {
+        var collection = db.collection('workout');
+
+        collection.aggregate([
+                {'$project':{
+                    'duration':1,
+                    '_userid':1,
+                    date:1,
+                    stretchesDone:1,
+                    year:{$year:'$date'},
+                    week:{$week:'$date'}
+
+                }},
+                {$group:{"_id":{year:'$year',week:'$week',_userid:'$_userid'}, 'count':{$sum:1}}}
+
+
+
+
+
+
+
+
+
+
+
+            ]
+
+        ,function (err1, results) {
+
+
+                if (err1) {
+                    console.log(err1);
+                    res.status(500).end();
+                } else {
+
+
+                    res.json(results);
+                }
+            });
+
+    });
+
+});
+
+
+
+
+
+
+
 //TODO: remove this.
 shr.router.get('/', function (req, res, next) {
     shr.mngC.connect(shr.url, function (err, db) {
