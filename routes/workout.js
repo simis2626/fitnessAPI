@@ -167,9 +167,12 @@ shr.router.get('/hist/:_userid/:returnNum', function (req, res, next) {
                                 }
                             },
                                             {$project:{'stretches':1,'count':1,'duration':1, 'stretchesBool':{$eq:['$stretches','$count']} }},
-                            {$sort: {'_id.year': 1, '_id.dayOfYear': 1}},
+                            {$sort: {'_id.year': -1, '_id.dayOfYear': -1}},
                                             {$match:{'_id._userid':req.params._userid}},
-                                            {$limit:parseInt(req.params.returnNum)}]}}
+                            {$limit: parseInt(req.params.returnNum)},
+                            {$sort: {'_id.year': 1, '_id.dayOfYear': 1}}]
+                    }
+                }
 
 
                     ]
