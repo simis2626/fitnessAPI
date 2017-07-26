@@ -16,7 +16,6 @@ shr.router.post('/', function (req, res, next) {
     insertDoc.date = new Date(insertDoc.date);
 
 
-
     shr.mngC.connect(shr.url, function (err, db) {
         var collection = db.collection('weighin');
         collection.insertOne(insertDoc, function (err, docs) {

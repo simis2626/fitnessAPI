@@ -150,7 +150,7 @@ shr.router.get('/hist/:_userid/:returnNum', function (req, res, next) {
 
                                 }
                             }
-                                            ,
+                            ,
                             {
                                 $group: {
                                     "_id": {
@@ -166,16 +166,23 @@ shr.router.get('/hist/:_userid/:returnNum', function (req, res, next) {
                                     'stretches': {$sum: {$cond: ['$stretchesDone', 1, 0]}}
                                 }
                             },
-                                            {$project:{'stretches':1,'count':1,'duration':1, 'stretchesBool':{$eq:['$stretches','$count']} }},
+                            {
+                                $project: {
+                                    'stretches': 1,
+                                    'count': 1,
+                                    'duration': 1,
+                                    'stretchesBool': {$eq: ['$stretches', '$count']}
+                                }
+                            },
                             {$sort: {'_id.year': -1, '_id.dayOfYear': -1}},
-                                            {$match:{'_id._userid':req.params._userid}},
+                            {$match: {'_id._userid': req.params._userid}},
                             {$limit: parseInt(req.params.returnNum)},
                             {$sort: {'_id.year': 1, '_id.dayOfYear': 1}}]
                     }
                 }
 
 
-                    ]
+            ]
 
 
             , function (err1, results) {
