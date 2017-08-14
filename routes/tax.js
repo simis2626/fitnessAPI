@@ -13,7 +13,14 @@ shr.router.get('/groupBy/day', function (req, res, next) {
     shr.mngC.connect(shr.url, function (err, db) {
         var collection = db.collection('taxTrans');
         collection.aggregate([{'$group':{
-            '_id':{'Date':'$Date',Day:'$Day','Year-Month':'$Year-Month'},id:{$push:'$_id'},Details:{$push:'$Details'},Cost:{$push:'$Cost'},Account:{$push:'$Account'},Category:{$push:'$Category'}}
+            '_id':{'Date':'$Date',Day:'$Day','Year-Month':'$Year-Month'}
+            ,id:{$push:'$_id'}
+            ,Details:{$push:'$Details'}
+            ,Cost:{$push:'$Cost'}
+            ,Account:{$push:'$Account'}
+            ,Category:{$push:'$Category'}
+            ,claim:{$push:'$claim'}
+            ,note:{$push:'$note'}}
         },{$sort:{'_id.Date':1}}], function(err,results){
             if (err) {
                         console.log(err);
