@@ -377,8 +377,22 @@ var insertWorkouts = function () {
     });
 };
 
+var convertDate = function () {
+    shr.mngC.connect(shr.url, function (err, db) {
+        var collC = db.collection('taxTrans');
+        collC.find().forEach(function (doc) {
 
-insertWorkouts();
+                doc.Date = new Date(doc.Date.substr(6, 4), doc.Date.substr(3, 2) - 1, doc.Date.substr(0, 2));
+                collC.save(doc);
+
+
+            }
+        );
+    });
+};
+
+
+convertDate();
 return;
 
 
