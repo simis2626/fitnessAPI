@@ -59,7 +59,12 @@ shr.router.post('/', function (req, res, next) {
             insertDoc._id = new mongoObject.ObjectId(insertDoc._id);
 
             var coll = db.collection('taxTrans');
-            coll.insertOne(insertDoc, function (err, results) {
+            coll.updateOne({"_id": insertDoc._id}, {
+                $set: {
+                    "claim": insertDoc.claim,
+                    "note": insertDoc.note
+                }
+            }, function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
