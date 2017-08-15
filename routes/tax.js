@@ -54,20 +54,26 @@ shr.router.get('/', function (req, res, next) {
 
 shr.router.post('/', function (req, res, next) {
     shr.mngC.connect(shr.url, function (err, db) {
-        var insertDoc = req.body;
-        insertDoc._id =  new mongoObject.ObjectId(insertDoc._id);
+        req.body.forEach(function (obj) {
+            var insertDoc = obj;
+            insertDoc._id = new mongoObject.ObjectId(insertDoc._id);
 
-        var coll = db.collection('taxTrans');
-        coll.insertOne(insertDoc, function (err, results) {
-            if (err) {
-                console.log(err);
-                res.statusCode(500).end();
-            } else {
-                res.json(results);
+            var coll = db.collection('taxTrans');
+            coll.insertOne(insertDoc, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
 
-            }
-            db.close();
+
+                }
+
+
+            });
         });
+        res.json(true);
+        setTimeout(function () {
+            db.close();
+        }, 15000)
     });
 
 
