@@ -43,18 +43,38 @@ shr.router.get('/:userid', function (req, res, next) {
                             'date': {'$first': '$date'},
                             'bmi': {'$first': '$bmi'}
                         }
+                    }, {
+                        $sort: {'date': 1}
                     }
                 ]
                 , function (err2, docs2) {
+                    if (err2) {
+                        console.log(err2);
+                        return;
+                    }
                     db.close();
                     docs2.forEach(function (obj) {
                         obj.time = "fitbit";
+                        obj.date = new Date(obj.date);
                     });
                     docs.forEach(function (obj) {
                         obj.date = new Date(obj.date);
                     });
                     results = docs.concat(docs2);
-                    res.json(results);
+                    var filterResults = results.filter(function (obj) {
+                        return obj.date.valueOf() >= new Date("2017-08-25").valueOf();
+                    });
+                    var augArray = filterResults.map(function (obj, ndx, arr) {
+                        if (ndx == 0) {
+                            obj.progress = 0;
+                            return obj;
+                        }
+                        obj.progress = arr[0].weight - obj.weight;
+                        return obj;
+                    });
+
+
+                    res.json(augArray);
                 });
 
         });
