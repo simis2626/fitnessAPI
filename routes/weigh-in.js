@@ -66,7 +66,7 @@ shr.router.get('/:userid', function (req, res, next) {
                     });
 
                     var compfunc = function (dt1, dt2) {
-                        dt1.valueOf() < dt2.valueOf() ? -1 : 1;
+                        return dt1.valueOf() < dt2.valueOf() ? -1 : 1;
                     };
 
                     filterResults.sort(compfunc);
