@@ -64,6 +64,13 @@ shr.router.get('/:userid', function (req, res, next) {
                     var filterResults = results.filter(function (obj) {
                         return obj.date.valueOf() >= new Date("2017-08-25").valueOf();
                     });
+
+                    var compfunc = function (dt1, dt2) {
+                        dt1.valueOf() < dt2.valueOf() ? -1 : 1;
+                    };
+
+                    filterResults.sort(compfunc);
+
                     var augArray = filterResults.map(function (obj, ndx, arr) {
                         if (ndx == 0) {
                             obj.progress = 0;
