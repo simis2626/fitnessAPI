@@ -83,7 +83,7 @@ const get30DaysWeights = function (_userid, callback) {
             var post_options = {
                 host: 'api.fitbit.com',
                 port: '443',
-                path: '/1/user/-/body/log/weight/date/' + new Date().getFullYear() + '-' + dtMonth + '-' + new Date().getDate() + '/1m.json',
+                path: '/1/user/-/body/log/weight/date/' + new Date().getFullYear() + '-' + dtMonth + '-' + (new Date().getDate().length > 1 ? new Date().getDate() : '0' + new Date().getDate()) + '/1w.json',
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -99,15 +99,20 @@ const get30DaysWeights = function (_userid, callback) {
                 res1.on('end', function () {
                     var collweight = db.collection('fitbitWeight');
                     var JSONbody = JSON.parse(body);
+                    if (JSONbody.errors) {
+                        console.log(JSONbody.errors);
+                        return;
+                    }
                     JSONbody.weight.forEach(function (obj) {
                         obj._userid = fitbitAuth._userid;
                     });
 
-
+                    if (JSONbody.weight.length > 0) {
                     collweight.insertMany(JSONbody.weight, null, function (err2, results3) {
                         db.close();
                         callback(results3);
                     });
+                    }
                 });
                 res1.on('error', function (err) {
                     console.log(err);
@@ -181,5 +186,18 @@ shr.router.post('/', function (req, res1, next) {
 
 });
 
+setInterval(function () {
+    console.log("getting fitbit Weighins");
+    shr.mngC.connect(shr.url, function (err, db) {
+        coll = db.collection('fitbit');
+        coll.find().forEach(function (obj) {
+            console.log(obj._userid);
+            get30DaysWeights(obj._userid, function (results3) {
+                console.log(results3);
+
+            });
+        });
+    });
+}, 1.123 * Math.pow(10, 8));
 
 module.exports = shr.router;
