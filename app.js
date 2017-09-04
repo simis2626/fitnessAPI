@@ -44,18 +44,17 @@ app.use(function (req, res, next) {
         var token = token.substr('Bearer '.length);
         jwt.verify(token, pubKey, function (err, decode) {
             console.log(err, decode);
-            if (err) {
+            if (err != null) {
                 res.status(401);
                 res.send('API requires Auth0 JWT');
-                res.end();
                 return;
             }
             next();
         })
+    } else {
+        res.status(401);
+        res.send('API requires Auth0 JWT');
     }
-    res.status(401);
-    res.send('API requires Auth0 JWT');
-    res.end();
 
 });
 app.use('/api/activity', activity);
