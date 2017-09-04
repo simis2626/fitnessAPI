@@ -40,18 +40,16 @@ app.use(cookieParser());
 app.use(function (req, res, next) {
     console.log('here');
     var token = req.get('Authorization');
-    console.log(token);
     if (token) {
         var token = token.substr('Bearer '.length);
         jwt.verify(token, pubKey, function (err, decode) {
+            console.log(err, decode);
             if (err) {
-                console.log(err);
                 res.status(401);
                 res.send('API requires Auth0 JWT');
                 res.end();
                 return;
             }
-            console.log(decode);
             next();
         })
     }
