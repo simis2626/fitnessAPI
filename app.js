@@ -55,7 +55,6 @@ app.use(function (req, res, next) {
             next();
         })
     }
-
     res.status(401);
     res.send('API requires Auth0 JWT');
     res.end();
