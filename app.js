@@ -6,16 +6,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var jwt = require('express-jwt');
 var fs = require('fs');
+var jwt = require('jsonwebtoken');
 
-
-var publicKey = fs.readFileSync('publicKey.pub');
-
-
-var jwtCheck = jwt({secret: publicKey});
-
-
+var pubKey = fs.readFileSync('simis2626.pem');
 
 
 var activity = require('./routes/activity');
@@ -33,13 +27,21 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
+
+app.use(function (req, res, next) {
+    var token = res.get('Authorisation');
+    var token = token.substr('Bearer '.length);
+    console.log(token);
+
+});
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/api/', jwtCheck);
+//app.use('/api/', jwtCheck);
 
 app.use('/api/activity', activity);
 app.use('/api/workout', workout);
