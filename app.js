@@ -32,6 +32,7 @@ app.use(function (req, res, next) {
     var token = res.get('Authorisation');
     var token = token.substr('Bearer '.length);
     console.log(token);
+    next();
 
 });
 
