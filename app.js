@@ -39,7 +39,7 @@ app.use(cookieParser());
 //app.use('/api/', jwtCheck);
 app.use(function (req, res, next) {
     console.log('here');
-    var token = res.get('Authorization');
+    var token = req.get('Authorization');
     console.log(token);
     if (token) {
         var token = token.substr('Bearer '.length);
