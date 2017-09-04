@@ -47,6 +47,8 @@ app.use(function (req, res, next) {
             if (err) {
                 res.status(401);
                 res.send('API requires Auth0 JWT');
+                res.end();
+                return;
             }
             console.log(decode);
             next();
@@ -55,6 +57,8 @@ app.use(function (req, res, next) {
 
     res.status(401);
     res.send('API requires Auth0 JWT');
+    res.end();
+
 });
 app.use('/api/activity', activity);
 app.use('/api/workout', workout);
