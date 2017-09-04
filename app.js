@@ -7,11 +7,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var jwt = require('express-jwt');
+var fs = require('fs');
 
-var jwtCheck = jwt({
-    secret: new Buffer(process.env.SECRET, 'base64'),
-    audience: process.env.AUDIENCE
-});
+
+var publicKey = fs.readFileSync('publicKey.pub');
+
+
+var jwtCheck = jwt({secret: publicKey});
 
 
 
