@@ -43,10 +43,18 @@ app.use(function (req, res, next) {
     console.log(token);
     if (token) {
         var token = token.substr('Bearer '.length);
-        console.log(token);
+        jwt.verify(token, pubKey, function (err, decode) {
+            if (err) {
+                res.status(401);
+                res.send('API requires Auth0 JWT');
+            }
+            console.log(decode);
+            next();
+        })
     }
-    next();
 
+    res.status(401);
+    res.send('API requires Auth0 JWT');
 });
 app.use('/api/activity', activity);
 app.use('/api/workout', workout);
