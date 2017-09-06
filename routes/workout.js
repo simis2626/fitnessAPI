@@ -13,7 +13,7 @@ var shared = require('./shared');
 var shr = new shared();
 
 
-shr.router.post('/from/:strStart/to/:strEnd/:_userId', function (req, res, next) {
+shr.router.get('/from/:strStart/to/:strEnd/:_userId', function (req, res, next) {
 
     var dtStart = new Date(req.params.strStart);
     var dtEnd = new Date(req.params.strEnd);
