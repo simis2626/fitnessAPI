@@ -13,15 +13,16 @@ var shared = require('./shared');
 var shr = new shared();
 
 
-shr.router.post('/from/:strStart/to/:strEnd', function (req, res, next) {
+shr.router.post('/from/:strStart/to/:strEnd/:_userId', function (req, res, next) {
 
     var dtStart = new Date(req.params.strStart);
     var dtEnd = new Date(req.params.strEnd);
+    var _userId = req.params._userId;
 
 
     shr.mngC.connect(shr.url, function (err, db) {
         var collection = db.collection('workout');
-        collection.find({date: {$gte: dtStart, $lte: dtEnd}, _userid: req.body._userid}).toArray(function (err, docs) {
+        collection.find({date: {$gte: dtStart, $lte: dtEnd}, _userid: _userId}).toArray(function (err, docs) {
             if (err) {
                 console.log(err);
             }
