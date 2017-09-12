@@ -185,8 +185,8 @@ shr.router.post('/', function (req, res1, next) {
 
 
 });
-
-setInterval(function () {
+/*
+setInterval(function () {*/
     console.log("getting fitbit Weighins");
     shr.mngC.connect(shr.url, function (err, db) {
         coll = db.collection('fitbit');
@@ -198,6 +198,6 @@ setInterval(function () {
             });
         });
     });
-}, 1.123 * Math.pow(10, 8));
+/*}, 1.123 * Math.pow(10, 8));*/
 
 module.exports = shr.router;
