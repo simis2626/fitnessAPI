@@ -45,14 +45,14 @@ app.use(function (req, res, next) {
         jwt.verify(token, pubKey, function (err, decode) {
             if (err != null) {
                 res.status(401);
-                res.send('API requires Auth0 JWT');
+                res.send('API requires Google JWT');
                 return;
             }
             next();
         })
     } else {
         res.status(401);
-        res.send('API requires Auth0 JWT');
+        res.send('API requires Google JWT');
     }
 
 });
