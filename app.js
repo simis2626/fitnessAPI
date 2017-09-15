@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 //app.use('/api/', jwtCheck);
-app.use(function (req, res, next) {
+/*app.use(function (req, res, next) {
     console.log('here');
     var token = req.get('Authorization');
     if (token) {
@@ -56,7 +56,7 @@ app.use(function (req, res, next) {
         res.send('API requires Google JWT');
     }
 
-});
+});*/
 app.use('/api/activity', activity);
 app.use('/api/workout', workout);
 app.use('/api/weighin', weighin);
