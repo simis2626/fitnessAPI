@@ -36,27 +36,27 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+var GoogleAuth = require('google-auth-library');
+var auth = new GoogleAuth;
+var client = new auth.OAuth2('190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', '', '');
+
 //app.use('/api/', jwtCheck);
-/*app.use(function (req, res, next) {
+app.use(function (req, res, next) {
     console.log('here');
     var token = req.get('Authorization');
     if (token) {
-        var token = token.substr('Bearer '.length);
-        jwt.verify(token, pubKey, function (err, decode) {
-            if (err != null) {
-                console.log(err);
-                res.status(401);
-                res.send('API requires Google JWT');
-                return;
-            }
-            next();
-        })
+        client.verifyIdToken(
+            token,
+            '190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', next())
+
+
     } else {
         res.status(401);
         res.send('API requires Google JWT');
     }
 
-});*/
+});
 app.use('/api/activity', activity);
 app.use('/api/workout', workout);
 app.use('/api/weighin', weighin);
