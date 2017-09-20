@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 var GoogleAuth = require('google-auth-library');
-var auth = new GoogleAuth;
+var auth = new GoogleAuth();
 var client = new auth.OAuth2('190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', '', '');
 
 //app.use('/api/', jwtCheck);
