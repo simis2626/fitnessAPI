@@ -6,12 +6,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var fs = require('fs');
-var jwt = require('jsonwebtoken');
-
-var pubKey = fs.readFileSync('simis2626.pem');
-
-
 var activity = require('./routes/activity');
 var workout = require('./routes/workout');
 var weighin = require('./routes/weigh-in');
@@ -44,9 +38,11 @@ var client = new auth.OAuth2('190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps
 //app.use('/api/', jwtCheck);
 app.use(function (req, res, next) {
     console.log('here');
-    var token = req.get('Authorization').splice(0, 7);
-    console.log(token);
+    var token = req.get('Authorization');
+
     if (token) {
+        token.splice(0, 7).toString();
+        console.log(token);
         client.verifyIdToken(
             token,
             '190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', function (err, login) {
@@ -78,7 +74,7 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-
+    console.log(err);
   // render the error page
   res.status(err.status || 500);
     res.json(err);
