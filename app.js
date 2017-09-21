@@ -41,7 +41,7 @@ app.use(function (req, res, next) {
     var token = req.get('Authorization');
 
     if (token) {
-        token.slice(7);
+        token = token.slice(7);
         console.log(token);
         client.verifyIdToken(
             token,
