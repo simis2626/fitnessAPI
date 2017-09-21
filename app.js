@@ -42,12 +42,15 @@ app.use(function (req, res, next) {
 
     if (token) {
         token = token.slice(7);
-        console.log(token);
         client.verifyIdToken(
             token,
             '190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', function (err, login) {
-                console.log(err, login);
-                next();
+                if (login) {
+                    next();
+                }
+                else {
+                    res.status(401).send('API Key is not valid');
+                }
             })
 
 
