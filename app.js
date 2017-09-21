@@ -44,7 +44,6 @@ var client = new auth.OAuth2('190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps
 //app.use('/api/', jwtCheck);
 app.use(function (req, res, next) {
     console.log('here');
-    Bearer
     var token = req.get('Authorization').splice(0, 7);
     console.log(token);
     if (token) {
