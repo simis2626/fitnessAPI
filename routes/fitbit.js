@@ -19,6 +19,7 @@ const getAuthToken = function (_userid, callback) {
                 callback(err);
             }
             if (results) {
+                if (results.length>0){
                 if (results[0].expireTime.valueOf() > Date.now()) {
                     callback(results[0]);
                 } else {
@@ -65,7 +66,7 @@ const getAuthToken = function (_userid, callback) {
                     post_req.end();
 
 
-                }
+                }}
             }
         });
     });
