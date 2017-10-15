@@ -27,7 +27,7 @@ const getAuthToken = function (_userid, callback) {
                         'clientId': '228GFT',
                         'grant_type': "refresh_token",
                         'refresh_token': results[0].refresh_token,
-                        'redirect_uri': 'http://fitness.techtoedip.com:81/fitbit_success'
+                        'redirect_uri': 'http://fitness.fitforchange.me:81/fitbit_success'
 
                     });
 
@@ -141,7 +141,7 @@ shr.router.post('/', function (req, res1, next) {
         'clientId': '228GFT',
         'grant_type': "authorization_code",
         "code": req.body.code,
-        'redirect_uri': 'http://fitness.techtoedip.com:81/fitbit_success'
+        'redirect_uri': 'http://fitness.fitforchange.me:81/fitbit_success'
 
     });
 
