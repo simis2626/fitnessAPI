@@ -62,7 +62,7 @@ shr.router.get('/:userid', function (req, res, next) {
                     });
                     results = docs.concat(docs2);
                     var filterResults = results.filter(function (obj) {
-                        return obj.date.valueOf() >= new Date("2017-10-23").valueOf();
+                        return obj.date.valueOf() >= new Date("2017-10-22").valueOf();
                     });
 
                     var compfunc = function (dt1, dt2) {
