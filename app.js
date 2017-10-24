@@ -33,6 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
+app.use('/api/user', userapi);
 //app.use('/api/', jwtCheck);
 app.use(function (req, res, next) {
     console.log('here');
@@ -61,7 +62,6 @@ app.use('/api/activity', activity);
 app.use('/api/workout', workout);
 app.use('/api/weighin', weighin);
 app.use('/api/targetWO', targetWO);
-app.use('/api/user', userapi);
 app.use('/api/fitbit', fitbitInfo);
 app.use('/api/tax',tax);
 
