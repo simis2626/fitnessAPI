@@ -24,6 +24,7 @@ shr.router.post('/', function (req, res, next) {
 
     if (token) {
         token = token.slice(7);
+        console.log("google-verification");
         client.verifyIdToken(
             token,
             '190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', function (err, login) {
