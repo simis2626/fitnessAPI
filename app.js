@@ -42,7 +42,7 @@ app.use(function (req, res, next) {
     if (token) {
         token = token.slice(7);
         console.log(`verifying ${token}`);
-        jwt.verify(token,shr.token,function(error, payload){
+        jwt.verify(token,'testFitnessAPISig',function(error, payload){
         if(payload){
             console.log('jwt Verified');
             next();
