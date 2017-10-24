@@ -13,8 +13,9 @@ var targetWO = require('./routes/targetWO');
 var userapi = require('./routes/user');
 var fitbitInfo = require('./routes/fitbit');
 var tax = require('./routes/tax');
-
-
+var jwt = require('jsonwebtoken');
+var shared = require('./routes/shared');
+var shr = new shared();
 
 var app = express();
 
@@ -31,9 +32,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-var GoogleAuth = require('google-auth-library');
-var auth = new GoogleAuth();
-var client = new auth.OAuth2('190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', '', '');
 
 //app.use('/api/', jwtCheck);
 app.use(function (req, res, next) {
@@ -42,21 +40,20 @@ app.use(function (req, res, next) {
 
     if (token) {
         token = token.slice(7);
-        client.verifyIdToken(
-            token,
-            '190002128182-ei7n8eh95nourb0sdcoh2o12cindv9rp.apps.googleusercontent.com', function (err, login) {
-                if (login) {
-                    next();
-                }
-                else {
+        console.log(`verifying ${token}`);
+        jwt.verify(token,shr.token,function(error, payload){
+        if(payload){
+            console.log('jwt Verified');
+            next();
+        } else {
                     res.status(401).send('API Key is not valid');
                 }
-            })
+            });
 
 
     } else {
         res.status(401);
-        res.send('API requires Google JWT');
+        res.send('API requires Authorization header');
     }
 
 });

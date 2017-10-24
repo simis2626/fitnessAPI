@@ -204,19 +204,4 @@ shr.router.get('/hist/:_userid/:returnNum', function (req, res, next) {
 });
 
 
-//TODO: remove this.
-shr.router.get('/', function (req, res, next) {
-    shr.mngC.connect(shr.url, function (err, db) {
-        var collection = db.collection('workout');
-        collection.find().sort({name: 1}).toArray(function (err, results) {
-            res.json(results);
-            db.close();
-        })
-
-    });
-
-
-});
-
-
 module.exports = shr.router;
