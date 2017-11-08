@@ -84,7 +84,7 @@ const get30DaysWeights = function (_userid, callback) {
             var post_options = {
                 host: 'api.fitbit.com',
                 port: '443',
-                path: '/1/user/-/body/log/weight/date/today/1m.json',
+                path: '/1/user/-/body/log/weight/date/'+ new Date().getFullYear() + '-' + dtMonth + '-' + ((new Date().getDate()+1).toString().length > 1 ? (new Date().getDate()+1) : '0' + (new Date().getDate()+1)) + '/1m.json',
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
